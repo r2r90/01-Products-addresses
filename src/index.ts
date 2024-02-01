@@ -1,28 +1,21 @@
-import express, {Request, Response} from 'express'
-import bodyParser from "body-parser";
-import {productsRouter} from "./routes/products-router";
-import {addressesRouter} from "./routes/addresses-router";
+import express from "express";
+import { productsRouter } from "./routes/products-router";
+import { runDb } from "./repositories/db";
 
+const app = express();
+app.use(express.json());
 
-const app = express()
-const parserMiddelware = bodyParser({})
-app.use(parserMiddelware)
-const port = 3001
+const port = 3001;
 
-app.get('/', (req: Request, res: Response) => {
-    let helloMessage = 'Hello world !';
-    res.send(helloMessage)
-})
-
-
-app.use('/products', productsRouter)
-app.use('/addresses', addressesRouter)
-
+app.use("/products", productsRouter);
+/*app.use("/addresses", addressesRouter);*/
 
 // start app
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+const startApp = async () => {
+  await runDb();
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+};
 
-
-
+startApp();
